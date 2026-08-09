@@ -22,24 +22,16 @@
 
         .container {
             text-align: center;
+            color: white;
         }
 
-        button {
-            background: #ca9e6e;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            border-radius: 50px;
-            cursor: pointer;
-            color: #1f2a36;
-            font-weight: bold;
-            box-shadow: 0 4px 0 #7a5f3e;
-            transition: 0.1s ease;
+        .container h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
         }
 
-        button:active {
-            transform: translateY(4px);
-            box-shadow: 0 0px 0 #7a5f3e;
+        .container p {
+            opacity: 0.7;
         }
 
         /* POPUP */
@@ -82,32 +74,38 @@
 
         .popup-box .ok-btn {
             background: #4a8db7;
-            box-shadow: 0 4px 0 #2d5f7a;
+            border: none;
             padding: 10px 30px;
             font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 0 #2d5f7a;
+            transition: 0.1s ease;
+        }
+
+        .popup-box .ok-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #2d5f7a;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <button onclick="showPopup()">Show Popup</button>
+        <h1>👋 Hello!</h1>
+        <p>Popup will appear automatically...</p>
     </div>
 
-  <script>
-function crash() {
-     <div class="popup" id="popup">
+    <!-- POPUP -->
+    <div class="popup" id="popup">
         <div class="popup-box">
             <h2>haha</h2>
             <p>noob</p>
             <button class="ok-btn" onclick="closePopup()">OK</button>
         </div>
     </div>
-    setTimeout(repeatTask, 1);
-}
-
-repeatTask();
-</script>
 
     <script>
         function showPopup() {
@@ -117,16 +115,23 @@ repeatTask();
         function closePopup() {
             document.getElementById('popup').classList.remove('show');
         }
+
         document.getElementById('popup').addEventListener('click', function(e) {
             if (e.target === this) {
                 closePopup();
             }
         });
-
+        
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closePopup();
             }
+        });
+
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                showPopup();
+            }, 1);
         });
     </script>
 
