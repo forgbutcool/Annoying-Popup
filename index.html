@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🍪 clicker · cookie forge</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      user-select: none;
+    }
+
+    body {
+      background: linear-gradient(145deg, #1e2a3a 0%, #0f1722 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      margin: 0;
+      padding: 1rem;
+    }
+
+    .game-card {
+      background: rgba(34, 48, 64, 0.8);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 4rem 4rem 3rem 3rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 215, 150, 0.15);
+      padding: 2.5rem 2.8rem 3rem;
+      max-width: 600px;
+      width: 100%;
+      transition: box-shadow 0.2s;
+      text-align: center;
+    }
+
+    h1 {
+      font-weight: 500;
+      letter-spacing: 2px;
+      font-size: 2.3rem;
+      color: #f7e9d7;
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+      margin-top: -0.2rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    h1 span {
+      background: #d9b382;
+      color: #1f2a36;
+      font-size: 1.6rem;
+      padding: 0.1rem 1.2rem;
+      border-radius: 60px;
+      box-shadow: inset 0 -3px 0 #a5835a;
+    }
+
+    .cookie-monster {
+      background: #2b3d4e;
+      border-radius: 120px;
+      padding: 1.8rem 1.2rem 1.2rem;
+      margin: 0.5rem 0 1.2rem;
+      box-shadow: inset 0 -6px 0 #19232e, 0 12px 28px rgba(0,0,0,0.5);
+    }
+
+    .cookie-display {
+      background: #1e2d3b;
+      border-radius: 100px;
+      padding: 0.4rem 1.2rem;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.6);
+    }
+
+    .cookie-count {
+      font-size: 4.4rem;
+      font-weight: 700;
+      color: #ffddb0;
+      line-height: 1.2;
+      letter-spacing: 2px;
+      text-shadow: 0 0 12px #f1b87a80;
+      min-width: 4rem;
+    }
+
+    .cookie-label {
+      font-size: 1.6rem;
+      color: #b9cfdd;
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+
+    .click-area {
+      margin: 1.2rem 0 1.8rem;
+      transition: transform 0.1s ease;
+    }
+
+    .cookie-btn {
+      background: radial-gradient(circle at 30% 25%, #f7d8a8, #ca9e6e);
+      border: none;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      box-shadow: 0 14px 0 #7a5f3e, 0 20px 30px rgba(0, 0, 0, 0.5), inset 0 -4px 8px rgba(0,0,0,0.3), inset 0 8px 12px #ffeac2;
+      cursor: pointer;
+      transition: all 0.04s linear;
+      font-size: 5.5rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4f351b;
+      text-shadow: 0 2px 4px #dbb07c;
+      transform: scale(1);
+      margin: 0 auto;
+      will-change: transform;
+    }
+
+    .cookie-btn:active {
+      transform: scale(0.90);
+      box-shadow: 0 6px 0 #5f462b, 0 16px 28px rgba(0, 0, 0, 0.6);
+    }
+
+    .cookie-btn:focus-visible {
+      outline: 3px solid #f5cfa0;
+      outline-offset: 6px;
+    }
+
+    .stats {
+      background: #1b2937;
+      border-radius: 60px;
+      padding: 0.8rem 1.8rem;
+      margin: 1.5rem 0 1.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: inset 0 2px 8px #0b1117;
+      color: #deeaf3;
+      font-size: 1.2rem;
+      flex-wrap: wrap;
+      gap: 0.3rem 0.8rem;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.3rem;
+    }
+
+    .stat-value {
+      font-weight: 600;
+      font-size: 1.6rem;
+      color: #fadfbe;
+      min-width: 2.6rem;
+    }
+
+    .upgrade-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin: 1.6rem 0 0.8rem;
+    }
+
+    .upgrade-btn {
+      background: #2d4257;
+      border: none;
+      padding: 0.9rem 1.2rem;
+      border-radius: 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #f2e2cd;
+      font-size: 1.2rem;
+      font-weight: 500;
+      box-shadow: 0 6px 0 #121d27, 0 6px 12px rgba(0,0,0,0.4);
+      transition: all 0.08s ease;
+      cursor: pointer;
+      width: 100%;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .upgrade-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #121d27;
+    }
+
+    .upgrade-btn:disabled {
+      opacity: 0.5;
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #121d27;
+      pointer-events: none;
+      filter: grayscale(0.6);
+    }
+
+    .upgrade-name {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .upgrade-cost {
+      background: #1f3140;
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      font-size: 1rem;
+      color: #e7cbaa;
+    }
+
+    .upgrade-level {
+      background: #3f5a70;
+      padding: 0.2rem 0.9rem;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .reset-area {
+      margin-top: 2.2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .reset-btn {
+      background: transparent;
+      border: 1px solid #4c637b;
+      color: #b2c9dd;
+      padding: 0.5rem 2rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.15s;
+      backdrop-filter: blur(4px);
+      letter-spacing: 0.5px;
+    }
+
+    .reset-btn:hover {
+      background: #3d4f62;
+      color: #f2e2cd;
+      border-color: #7d99b5;
+      box-shadow: 0 0 12px #55708b40;
+    }
+
+    .footer-note {
+      margin-top: 1.5rem;
+      color: #6e869e;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 480px) {
+      .game-card { padding: 1.8rem 1.2rem; }
+      .cookie-btn { width: 140px; height: 140px; font-size: 4.2rem; }
+      .cookie-count { font-size: 3.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="game-card" role="main">
+  <h1>
+    🍪 cookie<span>forge</span>
+  </h1>
+
+  <div class="cookie-monster">
+    <div class="cookie-display">
+      <span class="cookie-count" id="cookieDisplay">0</span>
+      <span class="cookie-label">cookies</span>
+    </div>
+  </div>
+
+  <div class="click-area">
+    <button class="cookie-btn" id="clickButton" aria-label="Click to bake cookies">
+      🍪
+    </button>
+  </div>
+
+  <div class="stats">
+    <div class="stat-item">⚡ <span class="stat-value" id="cpsDisplay">0</span> /s</div>
+    <div class="stat-item">👆 <span class="stat-value" id="clickPowerDisplay">1</span></div>
+  </div>
+
+  <div class="upgrade-section">
+    <button class="upgrade-btn" id="upgradeClick" data-type="click">
+      <span class="upgrade-name">🔨 click power</span>
+      <span class="upgrade-cost" id="clickCostDisplay">10</span>
+      <span class="upgrade-level" id="clickLevelDisplay">Lv.0</span>
+    </button>
+
+    <button class="upgrade-btn" id="upgradeAuto" data-type="auto">
+      <span class="upgrade-name">🤖 auto-baker</span>
+      <span class="upgrade-cost" id="autoCostDisplay">20</span>
+      <span class="upgrade-level" id="autoLevelDisplay">Lv.0</span>
+    </button>
+  </div>
+
+  <div class="reset-area">
+    <button class="reset-btn" id="resetButton">⟳ restart</button>
+  </div>
+  <div class="footer-note">click · upgrade · idle</div>
+</div>
+
+<script>
+  (function() {
+    // --- state ---
+    let cookies = 0;
+    let clickPower = 1;
+    let clickLevel = 0;
+    let autoCps = 0;        // cookies per second
+    let autoLevel = 0;
+
+    // base costs
+    const BASE_CLICK_COST = 10;
+    const BASE_AUTO_COST = 20;
+
+    // DOM refs
+    const cookieDisplay = document.getElementById('cookieDisplay');
+    const cpsDisplay = document.getElementById('cpsDisplay');
+    const clickPowerDisplay = document.getElementById('clickPowerDisplay');
+
+    const clickCostDisplay = document.getElementById('clickCostDisplay');
+    const autoCostDisplay = document.getElementById('autoCostDisplay');
+    const clickLevelDisplay = document.getElementById('clickLevelDisplay');
+    const autoLevelDisplay = document.getElementById('autoLevelDisplay');
+
+    const clickButton = document.getElementById('clickButton');
+    const upgradeClickBtn = document.getElementById('upgradeClick');
+    const upgradeAutoBtn = document.getElementById('upgradeAuto');
+    const resetButton = document.getElementById('resetButton');
+
+    // helper: format integer
+    const fmt = (n) => Math.floor(n).toString();
+
+    // --- update UI ---
+    function updateUI() {
+      cookieDisplay.textContent = fmt(cookies);
+      cpsDisplay.textContent = fmt(autoCps);
+      clickPowerDisplay.textContent = fmt(clickPower);
+
+      // click upgrade
+      const clickCost = Math.floor(BASE_CLICK_COST * Math.pow(1.8, clickLevel));
+      clickCostDisplay.textContent = fmt(clickCost);
+      clickLevelDisplay.textContent = `Lv.${clickLevel}`;
+      upgradeClickBtn.disabled = (cookies < clickCost);
+
+      // auto upgrade
+      const autoCost = Math.floor(BASE_AUTO_COST * Math.pow(1.9, autoLevel));
+      autoCostDisplay.textContent = fmt(autoCost);
+      autoLevelDisplay.textContent = `Lv.${autoLevel}`;
+      upgradeAutoBtn.disabled = (cookies < autoCost);
+    }
+
+    // --- save / load ---
+    function saveGame() {
+      const data = {
+        cookies,
+        clickPower,
+        clickLevel,
+        autoCps,
+        autoLevel,
+        timestamp: Date.now()
+      };
+      try {
+        localStorage.setItem('cookieForgeSave', JSON.stringify(data));
+      } catch (_) { /* ignore */ }
+    }
+
+    function loadGame() {
+      try {
+        const raw = localStorage.getItem('cookieForgeSave');
+        if (!raw) return false;
+        const data = JSON.parse(raw);
+        // validate
+        if (typeof data.cookies === 'number' &&
+            typeof data.clickPower === 'number' &&
+            typeof data.clickLevel === 'number' &&
+            typeof data.autoCps === 'number' &&
+            typeof data.autoLevel === 'number') {
+          cookies = data.cookies;
+          clickPower = data.clickPower;
+          clickLevel = data.clickLevel;
+          autoCps = data.autoCps;
+          autoLevel = data.autoLevel;
+          return true;
+        }
+      } catch (_) { /* ignore */ }
+      return false;
+    }
+
+    // --- reset ---
+    function resetGame() {
+      cookies = 0;
+      clickPower = 1;
+      clickLevel = 0;
+      autoCps = 0;
+      autoLevel = 0;
+      updateUI();
+      saveGame();
+    }
+
+    // --- upgrades ---
+    function buyClickUpgrade() {
+      const cost = Math.floor(BASE_CLICK_COST * Math.pow(1.8, clickLevel));
+      if (cookies < cost) return false;
+      cookies -= cost;
+      clickLevel++;
+      // click power increase: +1 per level, but with small scaling
+      clickPower = 1 + clickLevel * 1;  // 1,2,3,4...
+      updateUI();
+      saveGame();
+      return true;
+    }
+
+    function buyAutoUpgrade() {
+      const cost = Math.floor(BASE_AUTO_COST * Math.pow(1.9, autoLevel));
+      if (cookies < cost) return false;
+      cookies -= cost;
+      autoLevel++;
+      // +1 cookie per second per level
+      autoCps = autoLevel * 1;  // 1,2,3,4...
+      updateUI();
+      saveGame();
+      return true;
+    }
+
+    // --- click ---
+    function handleClick() {
+      cookies += clickPower;
+      updateUI();
+      // save throttled? we save on every click but it's fine for small game
+      saveGame();
+      // tiny haptic feedback (visual)
+      clickButton.style.transform = 'scale(0.88)';
+      setTimeout(() => {
+        clickButton.style.transform = '';
+      }, 90);
+    }
+
+    // --- auto tick (idle) ---
+    let lastTick = performance.now();
+    function tick(time) {
+      if (autoCps > 0) {
+        const delta = (time - lastTick) / 1000; // seconds
+        if (delta > 0.1) {
+          const gain = autoCps * delta;
+          cookies += gain;
+          // avoid floating point creep: keep integer-ish
+          if (cookies > 1e12) cookies = Math.floor(cookies);
+          updateUI();
+          lastTick = time;
+          // save periodically, but not every frame
+          if (Math.floor(time / 3000) !== Math.floor((time - 200) / 3000)) {
+            saveGame();
+          }
+        }
+      } else {
+        lastTick = time;
+      }
+      requestAnimationFrame(tick);
+    }
+
+    // --- event listeners ---
+    clickButton.addEventListener('click', handleClick);
+
+    upgradeClickBtn.addEventListener('click', () => {
+      buyClickUpgrade();
+    });
+
+    upgradeAutoBtn.addEventListener('click', () => {
+      buyAutoUpgrade();
+    });
+
+    resetButton.addEventListener('click', () => {
+      if (confirm('Restart the cookie forge? All progress will be lost.')) {
+        resetGame();
+      }
+    });
+
+    // --- extra: keyboard shortcut "c" for click, "r" for reset? optional, we add "c" ---
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'c' || e.key === 'C') {
+        if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+          handleClick();
+        }
+      }
+      if ((e.key === 'r' || e.key === 'R') && e.ctrlKey) {
+        // ignore ctrl+r (browser reload)
+      }
+    });
+
+    // --- initialise ---
+    const loaded = loadGame();
+    if (!loaded) {
+      // set defaults (already set)
+      cookies = 0;
+      clickPower = 1;
+      clickLevel = 0;
+      autoCps = 0;
+      autoLevel = 0;
+    } else {
+      // ensure consistency: clickPower from level
+      clickPower = 1 + clickLevel * 1;
+      autoCps = autoLevel * 1;
+    }
+
+    updateUI();
+    // start tick loop
+    lastTick = performance.now();
+    requestAnimationFrame(tick);
+
+    // save on page unload
+    window.addEventListener('beforeunload', () => {
+      saveGame();
+    });
+
+    // extra: if tab goes idle, we still accumulate via tick but we save periodically
+    // we also save every 10 seconds as fallback
+    setInterval(() => {
+      saveGame();
+    }, 10000);
+
+  })();
+</script>
+</body>
+</html>
